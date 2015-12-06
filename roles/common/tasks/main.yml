@@ -1,0 +1,20 @@
+---
+- name: set locale.conf
+  template: src=locale.conf.j2 dest=/etc/locale.conf group=root owner=root mode=0644
+
+# ec2 amazon linux
+# - name: set locale to /etc/cloud/cloud.cfg
+#   lineinfile: dest=/etc/cloud/cloud.cfg line=locale: "{{ locale }}"
+
+# centos 6
+# - name: set locale i18n
+#   replace: dest=/etc/sysconfig/i18n regexp="^LANG=en_US\.UTF-8" replace="LANG={{ locale }}"
+
+- name: set localtime
+  file: src={{ zoneinfo_path }} dest=/etc/localtime state=link force=yes
+
+- name: install the 'Development tools' package group
+  yum: name="@Development tools" state=latest
+
+- name: upgrade all package
+  shell: state=latest name=*
